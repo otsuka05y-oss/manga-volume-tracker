@@ -13,6 +13,7 @@ export function SeriesDetail({ series: initial }: { series: Series }) {
   const [manualDate, setManualDate] = useState(
     series.next_volume_release_date ?? ""
   );
+  const [spineColor, setSpineColor] = useState(series.spine_color);
 
   const [searching, setSearching] = useState(false);
   const [searchMessage, setSearchMessage] = useState<string | null>(null);
@@ -106,6 +107,26 @@ export function SeriesDetail({ series: initial }: { series: Series }) {
           </p>
         )}
       </div>
+
+      <section className="space-y-2">
+        <p className="text-sm opacity-80">背表紙の色</p>
+        <div className="flex gap-2 items-center">
+          <input
+            type="color"
+            value={spineColor}
+            onChange={(e) => setSpineColor(e.target.value)}
+            className="h-10 w-16 rounded-md border border-black/15 dark:border-white/15 bg-transparent p-1"
+          />
+          <button
+            type="button"
+            onClick={() => patch({ spine_color: spineColor })}
+            disabled={saving}
+            className="rounded-md border border-black/15 dark:border-white/15 px-3 py-2 text-sm disabled:opacity-50"
+          >
+            保存
+          </button>
+        </div>
+      </section>
 
       <section className="space-y-2">
         <p className="text-sm opacity-80">所持巻数</p>

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { requireApiAuth } from "@/lib/auth/api";
+import { isValidHexColor } from "@/lib/color";
+import { DEFAULT_SPINE_COLOR } from "@/lib/constants";
 
 export async function GET(req: NextRequest) {
   const unauthorized = await requireApiAuth();
@@ -35,6 +37,9 @@ export async function POST(req: NextRequest) {
   const ownedVolume = Number.isFinite(body.owned_volume)
     ? Math.max(0, Math.trunc(body.owned_volume))
     : 0;
+  const spineColor = isValidHexColor(body.spine_color)
+    ? body.spine_color
+    : DEFAULT_SPINE_COLOR;
 
   if (!title) {
     return NextResponse.json({ error: "titleは必須です" }, { status: 400 });
@@ -47,6 +52,7 @@ export async function POST(req: NextRequest) {
       title,
       author: typeof body.author === "string" ? body.author : null,
       publisher: typeof body.publisher === "string" ? body.publisher : null,
+      spine_color: spineColor,
       owned_volume: ownedVolume,
       last_updated_at: new Date().toISOString(),
     })

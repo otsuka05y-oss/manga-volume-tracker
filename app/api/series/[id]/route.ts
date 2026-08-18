@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { requireApiAuth } from "@/lib/auth/api";
 import type { Series } from "@/lib/supabase/types";
+import { isValidHexColor } from "@/lib/color";
 
 type Context = { params: Promise<{ id: string }> };
 
@@ -42,6 +43,9 @@ export async function PATCH(req: NextRequest, { params }: Context) {
   }
   if (typeof body.publisher === "string" || body.publisher === null) {
     update.publisher = body.publisher;
+  }
+  if (isValidHexColor(body.spine_color)) {
+    update.spine_color = body.spine_color;
   }
 
   if (Number.isFinite(body.owned_volume)) {

@@ -1,5 +1,8 @@
 export const STALE_THRESHOLD_DAYS = 60;
 
+// Keep in sync with supabase/migrations/0002_add_spine_color.sql's default.
+export const DEFAULT_SPINE_COLOR = "#78716c";
+
 export const NOTIFY_LOOKAHEAD_DAYS = 0;
 export const NOTIFY_LAG_DAYS = 7;
 

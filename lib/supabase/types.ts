@@ -9,6 +9,7 @@ export type Series = {
   title: string;
   author: string | null;
   publisher: string | null;
+  spine_color: string;
 
   owned_volume: number;
   last_updated_at: string;

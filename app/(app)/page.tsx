@@ -1,5 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase/server";
-import { SeriesList } from "@/components/SeriesList";
+import { BookShelf } from "@/components/BookShelf";
 
 export default async function HomePage() {
   const supabase = getSupabaseAdmin();
@@ -9,8 +9,10 @@ export default async function HomePage() {
     .order("title", { ascending: true });
 
   if (error) {
-    return <p className="text-red-500">読み込みに失敗しました: {error.message}</p>;
+    return (
+      <p className="text-red-500 p-4">読み込みに失敗しました: {error.message}</p>
+    );
   }
 
-  return <SeriesList initialSeries={data ?? []} />;
+  return <BookShelf initialSeries={data ?? []} />;
 }
