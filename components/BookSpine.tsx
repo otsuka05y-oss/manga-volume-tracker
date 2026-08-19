@@ -5,13 +5,17 @@ import { SPINE_CREAM_COLOR } from "@/lib/constants";
 
 // Keep in sync with the spine width/gap constants in BookShelf.tsx.
 export const SPINE_WIDTH = 96;
-const MAX_TITLE_CHARS = 7;
 const SPINE_TEXT_COLOR = "#1c1512";
 
-function clampTitle(title: string) {
-  return title.length > MAX_TITLE_CHARS
-    ? title.slice(0, MAX_TITLE_CHARS - 1) + "…"
-    : title;
+// Shrinks the title to fit the spine's fixed height instead of truncating —
+// longer titles get a smaller (but still fully readable) font size.
+function titleFontSize(length: number): string {
+  if (length <= 5) return "20px";
+  if (length <= 7) return "17px";
+  if (length <= 9) return "15px";
+  if (length <= 12) return "13px";
+  if (length <= 16) return "11px";
+  return "9px";
 }
 
 export function BookSpine({
@@ -59,13 +63,14 @@ export function BookSpine({
       )}
 
       <span
-        className="vertical-text flex-1 flex items-center justify-center text-lg font-extrabold leading-tight px-1 mt-4"
+        className="vertical-text flex-1 flex items-center justify-center overflow-hidden font-extrabold leading-tight px-1 mt-4"
         style={{
           color: series.spine_color,
-          WebkitTextStroke: `1.1px ${SPINE_TEXT_COLOR}`,
+          WebkitTextStroke: `1.8px ${SPINE_TEXT_COLOR}`,
+          fontSize: titleFontSize(series.title.length),
         }}
       >
-        {clampTitle(series.title)}
+        {series.title}
       </span>
 
       <div className="flex flex-col items-center gap-0.5">

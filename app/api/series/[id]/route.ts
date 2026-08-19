@@ -54,29 +54,6 @@ export async function PATCH(req: NextRequest, { params }: Context) {
   if (Number.isFinite(body.owned_volume)) {
     update.owned_volume = Math.max(0, Math.trunc(body.owned_volume));
     update.last_updated_at = new Date().toISOString();
-    // A new volume is now owned, so the previously-tracked "next volume"
-    // info is stale — clear it so the cron job re-resolves it fresh.
-    update.next_volume_number = null;
-    update.next_volume_release_date = null;
-    update.next_volume_isbn = null;
-    update.release_date_source = null;
-    update.release_date_checked_at = null;
-    update.notified_for_volume = null;
-    update.notified_at = null;
-  }
-
-  if (
-    typeof body.next_volume_release_date === "string" ||
-    body.next_volume_release_date === null
-  ) {
-    update.next_volume_release_date = body.next_volume_release_date;
-    update.release_date_source = body.next_volume_release_date
-      ? "manual"
-      : null;
-    update.release_date_checked_at = new Date().toISOString();
-    if (Number.isFinite(body.next_volume_number)) {
-      update.next_volume_number = Math.trunc(body.next_volume_number);
-    }
   }
 
   if (Object.keys(update).length === 0) {

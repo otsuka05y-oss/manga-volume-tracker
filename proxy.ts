@@ -7,10 +7,6 @@ const publicPaths = ["/login"];
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
-  if (path.startsWith("/api/cron")) {
-    return NextResponse.next();
-  }
-
   const isPublic = publicPaths.includes(path) || path.startsWith("/api/auth");
   const cookie = req.cookies.get(SESSION_COOKIE_NAME)?.value;
   const session = await decrypt(cookie);
@@ -29,6 +25,6 @@ export default async function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|sw.js|icon.svg).*)",
+    "/((?!_next/static|_next/image|favicon.ico|icon.svg).*)",
   ],
 };

@@ -18,7 +18,6 @@ export function AppHeader() {
         漫画巻数トラッカー
       </Link>
       <nav className="flex items-center gap-4 text-sm">
-        <Link href="/settings">設定</Link>
         <button type="button" onClick={handleLogout} className="opacity-70">
           ログアウト
         </button>
