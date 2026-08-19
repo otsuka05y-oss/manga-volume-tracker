@@ -110,7 +110,7 @@ export function BookSpine({
         {series.author && (
           <span
             className="vertical-text text-[10px] font-medium text-black/70 max-h-16 overflow-hidden"
-            style={{ whiteSpace: "nowrap" }}
+            style={{ whiteSpace: "nowrap", lineHeight: 1 }}
           >
             {series.author}
           </span>

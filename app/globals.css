@@ -32,6 +32,7 @@ body {
 
 @utility shelf-wood {
   background-image:
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.06) 0px, rgba(0, 0, 0, 0.06) 2px, transparent 2px, transparent 6px),
-    linear-gradient(180deg, #8a5a35, #6b4226);
+    repeating-linear-gradient(90deg, rgba(255, 214, 170, 0.06) 0px, rgba(255, 214, 170, 0.06) 1px, transparent 1px, transparent 5px),
+    repeating-linear-gradient(90deg, rgba(40, 20, 8, 0.1) 0px, rgba(40, 20, 8, 0.1) 2px, transparent 2px, transparent 37px),
+    linear-gradient(180deg, #a8703f 0%, #8a5a35 45%, #6b4226 80%, #58341c 100%);
 }

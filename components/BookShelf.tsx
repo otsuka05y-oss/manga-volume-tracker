@@ -156,6 +156,7 @@ export function BookShelf({ initialSeries }: { initialSeries: Series[] }) {
         </p>
       ) : (
         <div className="mt-6 shelf-wood">
+          <div className="h-2 bg-[#3d2410] shadow-[0_3px_5px_rgba(0,0,0,0.5)]" />
           <div
             ref={scrollRef}
             onScroll={handleScroll}
@@ -182,7 +183,13 @@ export function BookShelf({ initialSeries }: { initialSeries: Series[] }) {
             ))}
             <div aria-hidden className="shrink-0" style={{ width: spacerWidth }} />
           </div>
-          <div className="h-4 bg-[#5a3a20] shadow-[inset_0_4px_6px_rgba(0,0,0,0.4)]" />
+          <div
+            className="h-5"
+            style={{
+              background: "linear-gradient(180deg, #7a4f2c 0%, #5a3a20 25%, #432911 100%)",
+              boxShadow: "inset 0 4px 6px rgba(0,0,0,0.4), 0 3px 5px rgba(0,0,0,0.35)",
+            }}
+          />
         </div>
       )}
 
