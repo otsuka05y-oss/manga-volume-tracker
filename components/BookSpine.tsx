@@ -5,7 +5,8 @@ import { SPINE_CREAM_COLOR } from "@/lib/constants";
 
 // Keep in sync with the spine width/gap constants in BookShelf.tsx.
 export const SPINE_WIDTH = 96;
-const MAX_TITLE_CHARS = 9;
+const MAX_TITLE_CHARS = 7;
+const SPINE_TEXT_COLOR = "#1c1512";
 
 function clampTitle(title: string) {
   return title.length > MAX_TITLE_CHARS
@@ -33,12 +34,11 @@ export function BookSpine({
       onClick={onSelect}
       aria-pressed={active}
       aria-label={`${series.title}、所有${series.owned_volume}巻`}
-      className={`relative snap-center shrink-0 w-24 h-56 rounded-sm flex flex-col items-center justify-between py-3 transition-all duration-200 ${
+      className={`relative snap-center shrink-0 w-24 h-56 rounded-sm flex flex-col items-center py-3 transition-all duration-200 ${
         active ? "scale-105 shadow-lg z-10" : "opacity-80 scale-95 shadow"
       }`}
       style={{
         backgroundColor: SPINE_CREAM_COLOR,
-        color: "#1c1512",
         boxShadow: active ? `0 0 0 3px ${series.spine_color}` : undefined,
       }}
     >
@@ -57,20 +57,32 @@ export function BookSpine({
           />
         )
       )}
+
       <span
-        className="text-base font-extrabold"
-        style={{ color: series.spine_color }}
+        className="vertical-text flex-1 flex items-center justify-center text-lg font-extrabold leading-tight px-1 mt-4"
+        style={{
+          color: series.spine_color,
+          WebkitTextStroke: `1.1px ${SPINE_TEXT_COLOR}`,
+        }}
       >
-        {series.owned_volume}
-      </span>
-      <span className="vertical-text flex-1 flex items-center justify-center text-sm font-bold leading-tight px-1">
         {clampTitle(series.title)}
       </span>
-      {series.author && (
-        <span className="vertical-text text-[10px] text-black/60 max-h-10 overflow-hidden">
-          {series.author}
+
+      <div className="flex flex-col items-center gap-0.5">
+        <span className="text-lg font-extrabold" style={{ color: SPINE_TEXT_COLOR }}>
+          {series.owned_volume}
         </span>
-      )}
+        {series.author && (
+          <span className="vertical-text text-[9px] text-black/60 max-h-8 overflow-hidden">
+            {series.author}
+          </span>
+        )}
+        {series.publisher && (
+          <span className="text-[8px] text-black/40 truncate max-w-full">
+            {series.publisher}
+          </span>
+        )}
+      </div>
     </button>
   );
 }

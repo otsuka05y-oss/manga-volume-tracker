@@ -129,7 +129,7 @@ export function SeriesDetail({ series: initial }: { series: Series }) {
       </div>
 
       <section className="space-y-2">
-        <p className="text-sm opacity-80">巻数ラベルの色</p>
+        <p className="text-sm opacity-80">タイトル文字の色</p>
         <div className="flex gap-2 items-center">
           <input
             type="color"
