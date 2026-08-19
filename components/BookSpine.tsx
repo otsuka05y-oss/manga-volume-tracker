@@ -15,6 +15,11 @@ const MAX_TITLE_FONT = 20;
 // single column instead of wrapping into a second one.
 const CHAR_HEIGHT_RATIO = 1.1;
 
+// A left/right gradient over the cream background to fake the rounded,
+// three-dimensional look of a book's spine standing on a shelf.
+const SPINE_DEPTH_GRADIENT =
+  "linear-gradient(90deg, rgba(0,0,0,0.18) 0%, rgba(255,255,255,0.35) 10%, rgba(255,255,255,0.08) 22%, transparent 40%, transparent 78%, rgba(0,0,0,0.16) 100%)";
+
 export function BookSpine({
   series,
   active,
@@ -54,11 +59,14 @@ export function BookSpine({
       aria-pressed={active}
       aria-label={`${series.title}、所有${series.owned_volume}巻`}
       className={`relative snap-center shrink-0 w-24 h-80 rounded-sm flex flex-col items-center py-2 transition-all duration-200 ${
-        active ? "scale-105 shadow-lg z-10" : "opacity-80 scale-95 shadow"
+        active ? "scale-105 z-10" : "opacity-80 scale-95"
       }`}
       style={{
         backgroundColor: SPINE_CREAM_COLOR,
-        boxShadow: active ? `0 0 0 3px ${series.spine_color}` : undefined,
+        backgroundImage: SPINE_DEPTH_GRADIENT,
+        boxShadow: active
+          ? `0 0 0 3px ${series.spine_color}, 2px 0 4px rgba(0,0,0,0.35), 0 8px 14px -4px rgba(0,0,0,0.25)`
+          : "2px 0 4px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.15)",
       }}
     >
       {series.is_completed ? (
@@ -77,7 +85,7 @@ export function BookSpine({
         )
       )}
 
-      <div aria-hidden style={{ height: "1cm" }} />
+      <div aria-hidden style={{ height: "0.5cm" }} />
 
       <span
         ref={titleRef}
@@ -93,7 +101,10 @@ export function BookSpine({
       </span>
 
       <div className="flex flex-col items-center gap-0.5">
-        <span className="text-lg font-extrabold" style={{ color: SPINE_TEXT_COLOR }}>
+        <span
+          className="text-2xl font-black tracking-tight"
+          style={{ color: SPINE_TEXT_COLOR, WebkitTextStroke: `0.4px ${SPINE_TEXT_COLOR}` }}
+        >
           {series.owned_volume}
         </span>
         {series.author && (
