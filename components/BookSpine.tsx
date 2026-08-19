@@ -95,7 +95,10 @@ export function BookSpine({
           {series.owned_volume}
         </span>
         {series.author && (
-          <span className="vertical-text text-[10px] font-medium text-black/70 max-h-9 overflow-hidden">
+          <span
+            className="vertical-text text-[10px] font-medium text-black/70 max-h-16 overflow-hidden"
+            style={{ whiteSpace: "nowrap" }}
+          >
             {series.author}
           </span>
         )}
