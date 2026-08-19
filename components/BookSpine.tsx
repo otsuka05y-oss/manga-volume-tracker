@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect, useRef, useState } from "react";
 import type { Series } from "@/lib/supabase/types";
 import { SPINE_CREAM_COLOR } from "@/lib/constants";
 
@@ -7,16 +8,12 @@ import { SPINE_CREAM_COLOR } from "@/lib/constants";
 export const SPINE_WIDTH = 96;
 const SPINE_TEXT_COLOR = "#1c1512";
 
-// Shrinks the title to fit the spine's fixed height instead of truncating —
-// longer titles get a smaller (but still fully readable) font size.
-function titleFontSize(length: number): string {
-  if (length <= 5) return "20px";
-  if (length <= 7) return "17px";
-  if (length <= 9) return "15px";
-  if (length <= 12) return "13px";
-  if (length <= 16) return "11px";
-  return "9px";
-}
+const MIN_TITLE_FONT = 8;
+const MAX_TITLE_FONT = 20;
+// Empirical vertical advance per CJK character (relative to font-size) for
+// leading-tight vertical-rl text — tuned so the title always fits in a
+// single column instead of wrapping into a second one.
+const CHAR_HEIGHT_RATIO = 1.25;
 
 export function BookSpine({
   series,
@@ -31,6 +28,24 @@ export function BookSpine({
   onSelect: () => void;
   registerRef: (el: HTMLButtonElement | null) => void;
 }) {
+  const titleRef = useRef<HTMLSpanElement | null>(null);
+  const [titleFontSize, setTitleFontSize] = useState(MAX_TITLE_FONT);
+
+  // The title's flex-1 area shrinks depending on whether author/publisher
+  // are shown below it, so the font size has to be computed from the
+  // actual measured height rather than guessed from character count alone.
+  useLayoutEffect(() => {
+    const el = titleRef.current;
+    if (!el) return;
+    const available = el.clientHeight;
+    const chars = Math.max(series.title.length, 1);
+    const size = Math.min(
+      MAX_TITLE_FONT,
+      Math.max(MIN_TITLE_FONT, available / (chars * CHAR_HEIGHT_RATIO))
+    );
+    setTitleFontSize(size);
+  }, [series.title, series.author, series.publisher]);
+
   return (
     <button
       ref={registerRef}
@@ -38,7 +53,7 @@ export function BookSpine({
       onClick={onSelect}
       aria-pressed={active}
       aria-label={`${series.title}、所有${series.owned_volume}巻`}
-      className={`relative snap-center shrink-0 w-24 h-56 rounded-sm flex flex-col items-center py-3 transition-all duration-200 ${
+      className={`relative snap-center shrink-0 w-24 h-72 rounded-sm flex flex-col items-center py-3 transition-all duration-200 ${
         active ? "scale-105 shadow-lg z-10" : "opacity-80 scale-95 shadow"
       }`}
       style={{
@@ -63,11 +78,13 @@ export function BookSpine({
       )}
 
       <span
-        className="vertical-text flex-1 flex items-center justify-center overflow-hidden font-extrabold leading-tight px-1 mt-4"
+        ref={titleRef}
+        className="vertical-text flex-1 flex items-center justify-center overflow-hidden font-extrabold leading-tight px-1 mt-2"
         style={{
           color: series.spine_color,
           WebkitTextStroke: `1.8px ${SPINE_TEXT_COLOR}`,
-          fontSize: titleFontSize(series.title.length),
+          fontSize: `${titleFontSize}px`,
+          whiteSpace: "nowrap",
         }}
       >
         {series.title}
