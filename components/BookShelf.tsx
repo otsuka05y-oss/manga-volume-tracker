@@ -12,6 +12,10 @@ import { STALE_THRESHOLD_DAYS } from "@/lib/constants";
 // Keep in sync with the gap applied to the scroll row below.
 const SPINE_GAP = 12;
 
+function isSeriesStale(s: Series) {
+  return !s.is_completed && daysSince(s.last_updated_at) >= STALE_THRESHOLD_DAYS;
+}
+
 export function BookShelf({ initialSeries }: { initialSeries: Series[] }) {
   const [series, setSeries] = useState(initialSeries);
   const [query, setQuery] = useState("");
@@ -29,8 +33,8 @@ export function BookShelf({ initialSeries }: { initialSeries: Series[] }) {
       : series;
 
     return [...list].sort((a, b) => {
-      const aStale = daysSince(a.last_updated_at) >= STALE_THRESHOLD_DAYS;
-      const bStale = daysSince(b.last_updated_at) >= STALE_THRESHOLD_DAYS;
+      const aStale = isSeriesStale(a);
+      const bStale = isSeriesStale(b);
       if (aStale !== bStale) return aStale ? -1 : 1;
       return a.title.localeCompare(b.title, "ja");
     });
@@ -121,6 +125,17 @@ export function BookShelf({ initialSeries }: { initialSeries: Series[] }) {
     setSeries((prev) => prev.map((s) => (s.id === id ? updated : s)));
   }
 
+  async function handleToggleCompleted(id: string, next: boolean) {
+    const res = await fetch(`/api/series/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ is_completed: next }),
+    });
+    if (!res.ok) return;
+    const { series: updated } = await res.json();
+    setSeries((prev) => prev.map((s) => (s.id === id ? updated : s)));
+  }
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2 px-4 pt-4">
@@ -140,37 +155,43 @@ export function BookShelf({ initialSeries }: { initialSeries: Series[] }) {
             : "該当する作品がありません"}
         </p>
       ) : (
-        <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="mt-6 flex items-center overflow-x-auto overscroll-x-contain snap-x snap-mandatory pb-40"
-          style={{ gap: SPINE_GAP }}
-        >
-          <div aria-hidden className="shrink-0" style={{ width: spacerWidth }} />
-          {filtered.map((s) => (
-            <BookSpine
-              key={s.id}
-              series={s}
-              active={s.id === activeId}
-              stale={daysSince(s.last_updated_at) >= STALE_THRESHOLD_DAYS}
-              onSelect={() =>
-                itemRefs.current
-                  .get(s.id)
-                  ?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" })
-              }
-              registerRef={(el) => {
-                if (el) itemRefs.current.set(s.id, el);
-                else itemRefs.current.delete(s.id);
-              }}
-            />
-          ))}
-          <div aria-hidden className="shrink-0" style={{ width: spacerWidth }} />
+        <div className="mt-6 shelf-wood">
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex items-end overflow-x-auto overscroll-x-contain snap-x snap-mandatory px-2 pt-6 pb-3"
+            style={{ gap: SPINE_GAP }}
+          >
+            <div aria-hidden className="shrink-0" style={{ width: spacerWidth }} />
+            {filtered.map((s) => (
+              <BookSpine
+                key={s.id}
+                series={s}
+                active={s.id === activeId}
+                stale={isSeriesStale(s)}
+                onSelect={() =>
+                  itemRefs.current
+                    .get(s.id)
+                    ?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" })
+                }
+                registerRef={(el) => {
+                  if (el) itemRefs.current.set(s.id, el);
+                  else itemRefs.current.delete(s.id);
+                }}
+              />
+            ))}
+            <div aria-hidden className="shrink-0" style={{ width: spacerWidth }} />
+          </div>
+          <div className="h-4 bg-[#5a3a20] shadow-[inset_0_4px_6px_rgba(0,0,0,0.4)]" />
         </div>
       )}
+
+      <div className="pb-40" />
 
       <BookShelfDetailPanel
         series={filtered.find((s) => s.id === activeId) ?? null}
         onVolumeChange={handleVolumeChange}
+        onToggleCompleted={handleToggleCompleted}
       />
     </div>
   );

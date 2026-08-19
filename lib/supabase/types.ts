@@ -10,6 +10,7 @@ export type Series = {
   author: string | null;
   publisher: string | null;
   spine_color: string;
+  is_completed: boolean;
 
   owned_volume: number;
   last_updated_at: string;

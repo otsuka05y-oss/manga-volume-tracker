@@ -27,5 +27,11 @@ body {
 
 @utility vertical-text {
   writing-mode: vertical-rl;
-  text-orientation: mixed;
+  text-orientation: upright;
+}
+
+@utility shelf-wood {
+  background-image:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.06) 0px, rgba(0, 0, 0, 0.06) 2px, transparent 2px, transparent 6px),
+    linear-gradient(180deg, #8a5a35, #6b4226);
 }

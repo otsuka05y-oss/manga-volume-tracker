@@ -169,7 +169,7 @@ export default function NewSeriesPage() {
 
           <div className="space-y-1">
             <label htmlFor="spine_color" className="text-sm opacity-80">
-              背表紙の色
+              巻数ラベルの色
             </label>
             <input
               id="spine_color"

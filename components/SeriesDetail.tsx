@@ -32,6 +32,12 @@ export function SeriesDetail({ series: initial }: { series: Series }) {
     return updated as Series;
   }
 
+  async function handleToggleCompleted() {
+    setSaving(true);
+    await patch({ is_completed: !series.is_completed });
+    setSaving(false);
+  }
+
   async function handleVolumeChange(next: number) {
     if (next === series.owned_volume) return;
     setSaving(true);
@@ -99,17 +105,31 @@ export function SeriesDetail({ series: initial }: { series: Series }) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-lg font-semibold">{series.title}</h1>
-        {(series.author || series.publisher) && (
-          <p className="text-sm opacity-60 mt-1">
-            {[series.author, series.publisher].filter(Boolean).join(" ・ ")}
-          </p>
-        )}
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-lg font-semibold">{series.title}</h1>
+          {(series.author || series.publisher) && (
+            <p className="text-sm opacity-60 mt-1">
+              {[series.author, series.publisher].filter(Boolean).join(" ・ ")}
+            </p>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={handleToggleCompleted}
+          disabled={saving}
+          className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium border disabled:opacity-50 ${
+            series.is_completed
+              ? "border-black/15 dark:border-white/15 opacity-70"
+              : "border-transparent bg-foreground text-background"
+          }`}
+        >
+          {series.is_completed ? "完結を解除" : "完結済みにする"}
+        </button>
       </div>
 
       <section className="space-y-2">
-        <p className="text-sm opacity-80">背表紙の色</p>
+        <p className="text-sm opacity-80">巻数ラベルの色</p>
         <div className="flex gap-2 items-center">
           <input
             type="color"

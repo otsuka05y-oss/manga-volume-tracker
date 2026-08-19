@@ -47,6 +47,9 @@ export async function PATCH(req: NextRequest, { params }: Context) {
   if (isValidHexColor(body.spine_color)) {
     update.spine_color = body.spine_color;
   }
+  if (typeof body.is_completed === "boolean") {
+    update.is_completed = body.is_completed;
+  }
 
   if (Number.isFinite(body.owned_volume)) {
     update.owned_volume = Math.max(0, Math.trunc(body.owned_volume));
