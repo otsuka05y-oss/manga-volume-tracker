@@ -78,12 +78,12 @@ export function BookSpine({
           {series.owned_volume}
         </span>
         {series.author && (
-          <span className="vertical-text text-[9px] text-black/60 max-h-8 overflow-hidden">
+          <span className="vertical-text text-[10px] font-medium text-black/70 max-h-9 overflow-hidden">
             {series.author}
           </span>
         )}
         {series.publisher && (
-          <span className="text-[8px] text-black/40 truncate max-w-full">
+          <span className="text-[9px] text-black/45 truncate max-w-full">
             {series.publisher}
           </span>
         )}

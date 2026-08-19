@@ -10,6 +10,8 @@ export function SeriesDetail({ series: initial }: { series: Series }) {
   const router = useRouter();
   const [series, setSeries] = useState(initial);
   const [spineColor, setSpineColor] = useState(series.spine_color);
+  const [author, setAuthor] = useState(series.author ?? "");
+  const [publisher, setPublisher] = useState(series.publisher ?? "");
 
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -24,6 +26,15 @@ export function SeriesDetail({ series: initial }: { series: Series }) {
     const { series: updated } = await res.json();
     setSeries(updated);
     return updated as Series;
+  }
+
+  async function handleAuthorPublisherSave() {
+    setSaving(true);
+    await patch({
+      author: author.trim() || null,
+      publisher: publisher.trim() || null,
+    });
+    setSaving(false);
   }
 
   async function handleToggleCompleted() {
@@ -75,6 +86,32 @@ export function SeriesDetail({ series: initial }: { series: Series }) {
           {series.is_completed ? "完結を解除" : "完結済みにする"}
         </button>
       </div>
+
+      <section className="space-y-2">
+        <p className="text-sm opacity-80">作者・出版社</p>
+        <div className="space-y-2">
+          <input
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            placeholder="著者(任意)"
+            className="w-full rounded-md border border-black/15 dark:border-white/15 bg-transparent px-3 py-2 text-sm"
+          />
+          <input
+            value={publisher}
+            onChange={(e) => setPublisher(e.target.value)}
+            placeholder="出版社(任意)"
+            className="w-full rounded-md border border-black/15 dark:border-white/15 bg-transparent px-3 py-2 text-sm"
+          />
+          <button
+            type="button"
+            onClick={handleAuthorPublisherSave}
+            disabled={saving}
+            className="rounded-md border border-black/15 dark:border-white/15 px-3 py-2 text-sm disabled:opacity-50"
+          >
+            保存
+          </button>
+        </div>
+      </section>
 
       <section className="space-y-2">
         <p className="text-sm opacity-80">タイトル文字の色</p>
