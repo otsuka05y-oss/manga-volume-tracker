@@ -13,7 +13,7 @@ const MAX_TITLE_FONT = 20;
 // Empirical vertical advance per CJK character (relative to font-size) for
 // leading-tight vertical-rl text — tuned so the title always fits in a
 // single column instead of wrapping into a second one.
-const CHAR_HEIGHT_RATIO = 1.25;
+const CHAR_HEIGHT_RATIO = 1.1;
 
 export function BookSpine({
   series,
@@ -53,7 +53,7 @@ export function BookSpine({
       onClick={onSelect}
       aria-pressed={active}
       aria-label={`${series.title}、所有${series.owned_volume}巻`}
-      className={`relative snap-center shrink-0 w-24 h-72 rounded-sm flex flex-col items-center py-3 transition-all duration-200 ${
+      className={`relative snap-center shrink-0 w-24 h-80 rounded-sm flex flex-col items-center py-2 transition-all duration-200 ${
         active ? "scale-105 shadow-lg z-10" : "opacity-80 scale-95 shadow"
       }`}
       style={{
@@ -77,9 +77,11 @@ export function BookSpine({
         )
       )}
 
+      <div aria-hidden style={{ height: "1cm" }} />
+
       <span
         ref={titleRef}
-        className="vertical-text flex-1 flex items-center justify-center overflow-hidden font-extrabold leading-tight px-1 mt-2"
+        className="vertical-text flex-1 flex items-start justify-center overflow-hidden font-extrabold leading-tight px-1"
         style={{
           color: series.spine_color,
           WebkitTextStroke: `1.8px ${SPINE_TEXT_COLOR}`,
