@@ -81,7 +81,7 @@ export function BookSpine({
 
       <span
         ref={titleRef}
-        className="vertical-text flex-1 flex items-start justify-center overflow-hidden font-extrabold leading-tight px-1"
+        className="vertical-text flex-1 flex items-center justify-start overflow-hidden font-extrabold leading-tight px-1"
         style={{
           color: series.spine_color,
           WebkitTextStroke: `1.8px ${SPINE_TEXT_COLOR}`,
