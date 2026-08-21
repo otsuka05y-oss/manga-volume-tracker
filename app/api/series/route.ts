@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { requireApiAuth } from "@/lib/auth/api";
 import { isValidHexColor } from "@/lib/color";
 import { DEFAULT_SPINE_COLOR } from "@/lib/constants";
+import { isValidTitleFont, DEFAULT_TITLE_FONT } from "@/lib/fonts";
 
 export async function GET(req: NextRequest) {
   const unauthorized = await requireApiAuth();
@@ -40,6 +41,9 @@ export async function POST(req: NextRequest) {
   const spineColor = isValidHexColor(body.spine_color)
     ? body.spine_color
     : DEFAULT_SPINE_COLOR;
+  const titleFont = isValidTitleFont(body.title_font)
+    ? body.title_font
+    : DEFAULT_TITLE_FONT;
 
   if (!title) {
     return NextResponse.json({ error: "titleは必須です" }, { status: 400 });
@@ -53,6 +57,7 @@ export async function POST(req: NextRequest) {
       author: typeof body.author === "string" ? body.author : null,
       publisher: typeof body.publisher === "string" ? body.publisher : null,
       spine_color: spineColor,
+      title_font: titleFont,
       owned_volume: ownedVolume,
       last_updated_at: new Date().toISOString(),
     })

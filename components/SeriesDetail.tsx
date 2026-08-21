@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import type { Series } from "@/lib/supabase/types";
 import { VolumeStepper } from "@/components/VolumeStepper";
 import { formatDate, formatRelativeDate } from "@/lib/date";
+import { TITLE_FONT_OPTIONS } from "@/lib/fonts";
 
 export function SeriesDetail({ series: initial }: { series: Series }) {
   const router = useRouter();
   const [series, setSeries] = useState(initial);
   const [spineColor, setSpineColor] = useState(series.spine_color);
+  const [titleFont, setTitleFont] = useState(series.title_font);
   const [author, setAuthor] = useState(series.author ?? "");
   const [publisher, setPublisher] = useState(series.publisher ?? "");
 
@@ -114,7 +116,7 @@ export function SeriesDetail({ series: initial }: { series: Series }) {
       </section>
 
       <section className="space-y-2">
-        <p className="text-sm opacity-80">タイトル文字の色</p>
+        <p className="text-sm opacity-80">タイトル文字の色・フォント</p>
         <div className="flex gap-2 items-center">
           <input
             type="color"
@@ -122,9 +124,20 @@ export function SeriesDetail({ series: initial }: { series: Series }) {
             onChange={(e) => setSpineColor(e.target.value)}
             className="h-10 w-16 rounded-md border border-black/15 dark:border-white/15 bg-transparent p-1"
           />
+          <select
+            value={titleFont}
+            onChange={(e) => setTitleFont(e.target.value)}
+            className="h-10 rounded-md border border-black/15 dark:border-white/15 bg-transparent px-2"
+          >
+            {TITLE_FONT_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
           <button
             type="button"
-            onClick={() => patch({ spine_color: spineColor })}
+            onClick={() => patch({ spine_color: spineColor, title_font: titleFont })}
             disabled={saving}
             className="rounded-md border border-black/15 dark:border-white/15 px-3 py-2 text-sm disabled:opacity-50"
           >

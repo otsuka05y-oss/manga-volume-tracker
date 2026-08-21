@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { requireApiAuth } from "@/lib/auth/api";
 import type { Series } from "@/lib/supabase/types";
 import { isValidHexColor } from "@/lib/color";
+import { isValidTitleFont } from "@/lib/fonts";
 
 type Context = { params: Promise<{ id: string }> };
 
@@ -46,6 +47,9 @@ export async function PATCH(req: NextRequest, { params }: Context) {
   }
   if (isValidHexColor(body.spine_color)) {
     update.spine_color = body.spine_color;
+  }
+  if (isValidTitleFont(body.title_font)) {
+    update.title_font = body.title_font;
   }
   if (typeof body.is_completed === "boolean") {
     update.is_completed = body.is_completed;

@@ -3,9 +3,10 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { Series } from "@/lib/supabase/types";
 import { SPINE_CREAM_COLOR } from "@/lib/constants";
+import { getTitleFontFamily } from "@/lib/fonts";
 
 // Keep in sync with the spine width/gap constants in BookShelf.tsx.
-export const SPINE_WIDTH = 96;
+export const SPINE_WIDTH = 80;
 const SPINE_TEXT_COLOR = "#1c1512";
 
 const MIN_TITLE_FONT = 8;
@@ -58,7 +59,7 @@ export function BookSpine({
       onClick={onSelect}
       aria-pressed={active}
       aria-label={`${series.title}、所有${series.owned_volume}巻`}
-      className={`relative snap-center shrink-0 w-24 h-80 rounded-sm flex flex-col items-center py-2 transition-all duration-200 ${
+      className={`relative snap-center shrink-0 w-20 h-80 rounded-sm flex flex-col items-center py-2 transition-all duration-200 ${
         active ? "scale-105 z-10" : "opacity-80 scale-95"
       }`}
       style={{
@@ -92,7 +93,7 @@ export function BookSpine({
         className="vertical-text flex-1 flex items-center justify-start overflow-hidden font-extrabold leading-tight px-1"
         style={{
           color: series.spine_color,
-          WebkitTextStroke: `1.8px ${SPINE_TEXT_COLOR}`,
+          fontFamily: getTitleFontFamily(series.title_font),
           fontSize: `${titleFontSize}px`,
           whiteSpace: "nowrap",
         }}

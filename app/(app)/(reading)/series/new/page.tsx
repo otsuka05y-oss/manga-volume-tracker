@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { DEFAULT_SPINE_COLOR } from "@/lib/constants";
+import { DEFAULT_TITLE_FONT, TITLE_FONT_OPTIONS } from "@/lib/fonts";
 
 export default function NewSeriesPage() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function NewSeriesPage() {
   const [publisher, setPublisher] = useState("");
   const [ownedVolume, setOwnedVolume] = useState(0);
   const [spineColor, setSpineColor] = useState(DEFAULT_SPINE_COLOR);
+  const [titleFont, setTitleFont] = useState<string>(DEFAULT_TITLE_FONT);
 
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -30,6 +32,7 @@ export default function NewSeriesPage() {
         publisher: publisher.trim() || null,
         owned_volume: ownedVolume,
         spine_color: spineColor,
+        title_font: titleFont,
       }),
     });
     const data = await res.json();
@@ -110,6 +113,24 @@ export default function NewSeriesPage() {
               onChange={(e) => setSpineColor(e.target.value)}
               className="h-10 w-16 rounded-md border border-black/15 dark:border-white/15 bg-transparent p-1"
             />
+          </div>
+
+          <div className="space-y-1">
+            <label htmlFor="title_font" className="text-sm opacity-80">
+              タイトルのフォント
+            </label>
+            <select
+              id="title_font"
+              value={titleFont}
+              onChange={(e) => setTitleFont(e.target.value)}
+              className="h-10 rounded-md border border-black/15 dark:border-white/15 bg-transparent px-2"
+            >
+              {TITLE_FONT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
